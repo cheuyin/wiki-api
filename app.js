@@ -4,7 +4,7 @@ const express = require("express");
 const port = 3000;
 
 const app = express();
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.set('view engine', "ejs");
 app.use(express.static("public"));
 
@@ -19,39 +19,38 @@ const articleSchema = new mongoose.Schema({
 })
 const Article = mongoose.model("Article", articleSchema);
 
-app.get("/articles", (req, res) => {
-  Article.find({}, (err, foundArticles) => {
-    if (!err) {
-      res.send(foundArticles);
-    } else {
-      res.send(err);
-    }
+app.route("/articles")
+  .get((req, res) => {
+    Article.find({}, (err, foundArticles) => {
+      if (!err) {
+        res.send(foundArticles);
+      } else {
+        res.send(err);
+      }
+    })
   })
-});
-
-app.post("/articles", (req, res) => {
-  const newArticle = new Article({
-    title: req.query.title,
-    content: req.query.content
-  });
-  newArticle.save((err) => {
-    if (!err) {
-      res.send("Successfully added a new article");
-    } else {
-      res.send(err);
-    }
-  });
-})
-
-app.delete("/articles", (req, res) => {
-  Article.deleteMany({}, (err) => {
-    if (!err) {
-      res.send("Successfully deleted all articles.");
-    } else {
-      res.send(err);
-    }
+  .post((req, res) => {
+    const newArticle = new Article({
+      title: req.query.title,
+      content: req.query.content
+    });
+    newArticle.save((err) => {
+      if (!err) {
+        res.send("Successfully added a new article");
+      } else {
+        res.send(err);
+      }
+    });
   })
-});
+  .delete((req, res) => {
+    Article.deleteMany({}, (err) => {
+      if (!err) {
+        res.send("Successfully deleted all articles.");
+      } else {
+        res.send(err);
+      }
+    })
+  });
 
 app.listen(port, () => {
   console.log("App running on port " + port);
