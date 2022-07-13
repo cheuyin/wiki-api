@@ -54,7 +54,6 @@ app.route("/articles")
 
 app.route("/articles/:article")
   .get((req, res) => {
-
     Article.findOne({title: req.params.article}, (err, foundArticle) => {
       if (foundArticle) {
         res.send(foundArticle);
@@ -62,6 +61,34 @@ app.route("/articles/:article")
         res.send("No article with that title was found");
       }
     })
+  })
+  .put((req, res) => {
+    Article.findOneAndUpdate(
+      {title: req.params.article},
+      {title: req.query.title, content: req.query.content},
+      {overwrite: true, new: true},
+      (err, doc) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(doc);
+        }
+      }
+    )
+  })
+  .patch((req, res) => {
+    Article.findOneAndUpdate(
+      {title: req.params.article},
+      {title: req.query.title, content: req.query.content},
+      {new: true},
+      (err, doc) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(doc);
+        }
+      }
+    )
   })
 
 app.listen(port, () => {
