@@ -7,6 +7,7 @@ const port = 3000;
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.set('view engine', "ejs");
+app.use(express.static("public"));
 
 main().catch(err => console.log(err));
 async function main() {
