@@ -90,6 +90,19 @@ app.route("/articles/:article")
       }
     )
   })
+  .delete((req, res) => {
+    Article.findOneAndDelete(
+      {title: req.params.article},
+      {select: "_id"},
+      (err, doc) => {
+        if (!err) {
+          res.send(doc);
+        } else {
+          res.send(err)
+        }
+      }
+    )
+  })
 
 app.listen(port, () => {
   console.log("App running on port " + port);
